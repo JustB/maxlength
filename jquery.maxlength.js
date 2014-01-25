@@ -18,8 +18,10 @@
 			if ( target.hasClass(this.markerClassName) ) {
 				return;
 			}
-
+			// We use an empty object because otherwise any changes to _defaults would
+			// interfere with subsequent use of the plugin.
 			var inst = {options: $.extend({}, this._defaults), feedbackTarget: $([])};
+
 			target.addClass(this.markerClassName).
 				data(this.propertyName, inst).
 				bind('keypress.maxlength', function(event) {
@@ -32,6 +34,7 @@
 				bind('keyup.maxlength', function() {
 					plugin._checkLength($(this));
 				});
+			// Apply user settings
 			this._optionPlugin(target, options);
 		}
 	});
