@@ -79,7 +79,53 @@ $.extend(MaxLength.prototype, {
 		}
 		$.extend(inst.options, options);
 
-		
+		// Maxlength options
+		if ( inst.feedbackTarget.length > 0 ) {
+			// Remove old feedback element
+			if ( inst.hadFeedbackTarget ) {
+				inst.feedbackTarget.empty().val('').
+					removeClass(this._feedbackClass + ' ' + this._fullClass + ' ' + this._overflowClass);
+			}
+			else {
+				inst.feedbackTarget.remove();
+			}
+		}
+		if ( inst.options.showFeedback ) {
+			// Add new feedback element
+			inst.hadFeedbackTarget = !!inst.options.feedbackTarget;
+			if ( $.isFunction(inst.options.feedbackTarget) ) {
+				inst.feedbackTarget = 
+					inst.options.feedbackTarget.apply(target[0], []);
+			}
+			else if ( inst.options.feedbackTarget ) {
+				inst.feedbackTarget = $(inst.options.feedbackTarget);
+			}
+			else {
+				inst.feedbackTarget = $('<span></span>').insertAfter(target);
+			}
+			inst.feedbackTarget.addClass(this._feedbackClass);
+		}
+		target.unbind('mouseover.maxlength focus.maxlength mouseout.maxlength blur.maxlength');
+		if ( inst.options.showFeedback == 'active' ) {
+			// Additional event handlers
+			target.bind('mouseover.maxlength', function (){
+				inst.feedbackTarget.css('visibility', 'visible');
+				}).bind('mouseout.maxlength', function () {
+					if ( !inst.focussed ) {
+						inst.feedbackTarget.css('visibility', 'hidden');
+					}
+				}).bind('focus.maxlength', function () {
+					inst.focussed = true;
+					inst.feedbackTarget.css('visibility', 'visible');
+				}).bind('blur.maxlength', function () {
+					inst.focussed = false;
+					inst.feedbackTarget.css('visibility', 'hidden');
+				});
+			inst.feedbackTarget.css('visibility', 'hidde');
+		}
+
+		this._checkLength(target);
+
 	}
 });
 
