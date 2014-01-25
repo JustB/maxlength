@@ -170,6 +170,27 @@ $.extend(MaxLength.prototype, {
 		var len = value.replace(/\r\n/g, '~~').replace(/\n/g, '~~'.length);
 
 		return {used: len, remaining: inst.options.max - len};
+	},
+	_destroyPlugin: function (target) {
+		target = $(target);
+		if ( !target.hasClass(this.markerClassName) ) {
+			return;
+		}
+
+		var inst = target.data(this.propertyName);
+		if ( inst.feedbackTarget.length > 0 ) {
+			if ( inst.hadFeedbackTarget ) {
+				inst.feedbackTarget.empty().val('').
+					css('visibility', 'visible').
+					removeClass(this._feedbackClass + ' ' + this._fullClass + ' ' + this._overflowClass);
+			}
+			else {
+				inst.feedbackTarget.remove();
+			}
+		}
+		target.removeClass(this.markerClassName + ' ' + this._fullClass + ' ' + this._overflowClass).
+		removeData(this.propertyName).
+		unbind('.maxlength');
 	}
 });
 
