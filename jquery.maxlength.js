@@ -160,6 +160,16 @@ $.extend(MaxLength.prototype, {
 		if ( len >= inst.options.max && $.isFunction(inst.options.onFull) ) {
 			inst.options.onFull.apply(target, [len > inst.options.max]);
 		}
+	},
+	/* Retrieve the counts of characters used and remaining.
+		@param target (jQuery) the control to check
+		@return (object) the current counts with attributes used and remaining */
+	_curLengthPlugin: function (target) {
+		var inst = target.data(this.propertyName);
+		var value = target.val();
+		var len = value.replace(/\r\n/g, '~~').replace(/\n/g, '~~'.length);
+
+		return {used: len, remaining: inst.options.max - len};
 	}
 });
 
