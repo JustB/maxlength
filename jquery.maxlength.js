@@ -40,12 +40,24 @@
 	});
 
 	/* Attach the max length functionality to a jQuery selection.
-		@param options (objec) the new settings to use for these instances (optional)
+		@param options (object) the new settings to use for these instances (optional)
 		@return (jQuery) for chaining further calls */
 	$.fn.maxlength = function (options) {
+		var otherArgs = Array.prototype.slice.call(arguments, 1);
 		// this refers to a jQuery collection, it should not be wrapper in jQuery
 		return this.each(function (){
-			plugin._attachPlugin(this, options || {});
+			if ( typeof options == 'string' ) {
+				if ( !plugin['_' + options + 'Plugin']) {
+					throw 'Unknown method: ' + options;
+				}
+				// The apply() method calls a function with a given this value and arguments provided as an array 
+				// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/apply
+				plugin['_' + options + 'Plugin'].
+					apply(plugin, [this].concat(otherArgs));
+			}
+			else {
+				plugin._attachPlugin(this, options || {});
+			}
 		});
 	};
 
