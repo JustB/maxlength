@@ -47,6 +47,39 @@ $.extend(MaxLength.prototype, {
 			});
 		// Apply user settings
 		this._optionPlugin(target, options);
+	},
+	/* Retrieve or reconfigure the settings for a control.
+		@param target   (element) the control to affect
+		@param options  (object) the new options for this instance or 
+						(string) an individual property name
+		@param value    (any) the individual property value
+						(omit if options is an object or to retrieve the value of a setting)
+		@return (any) if retrieving a value */	
+	_optionPlugin: function (target, options, value) {
+		target = $(target);
+		var inst = target.data(this.propertyName);
+		if ( !options || ( typeof options == 'string' && value == null ) ) {
+			// Get option
+			var name = options;
+			options = (inst || {}).options;
+			return ( options && name ? options[name] : options );
+		}
+
+		if ( !target.hasClass(this.markerClassName) ) {
+			return;
+		}
+
+		options = options || {};
+		if ( typeof options == 'string' ) {
+			// If updating a single value, turn into a map, so that it's possible
+			// to use $.extend
+			var name = options;
+			options = {};
+			options[name] = value;
+		}
+		$.extend(inst.options, options);
+
+		
 	}
 });
 
