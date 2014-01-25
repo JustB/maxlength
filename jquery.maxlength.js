@@ -147,6 +147,19 @@ $.extend(MaxLength.prototype, {
 		target.prop('disabled', true).addClass('maxlength-disabled');
 		var inst = target.data(this.propertyName);
 		inst.feedbackTarget.addClass('maxlength-disabled');
+	},
+	/* Check the length of the text and notify accordingly.
+		@param target (jQuery) the control to check */
+	_checkLength: function (target) {
+		var inst = target.data(this.propertyName);
+		var value = target.val();
+		var len = value.replace(/\r\n/g, '~~').replace(/\n/g, '~~'.length);
+
+		//other code
+
+		if ( len >= inst.options.max && $.isFunction(inst.options.onFull) ) {
+			inst.options.onFull.apply(target, [len > inst.options.max]);
+		}
 	}
 });
 
