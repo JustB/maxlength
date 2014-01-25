@@ -4,15 +4,26 @@ function MaxLength() {
 	// Add localization with $('#text1').maxlength($.maxlength.regional['fr']);
 	this.regional = []; // regional settings
 	this.regional[''] = { // Default regional settings
-		feedbackText: '{r} characters remaining ({m} maximum)'
+		feedbackText: '{r} characters remaining ({m} maximum)',
+		overflowText: '{o} characters too many ({m} maximum)'
 	};
 	this._defaults = {
-		max: 200 // Maximum length
+		max: 200, // Maximum length
+		truncate: true, // True to disallow further input, 'active' for hover/focus only
+		feedbackTarget: null, // jQuery selector or function for element to fill with feedback
+		onFull: null //Callback when full or overflowing, receives one parameter: true if overflowing, false if not
 	};
 	$.extend(this._defaults, this.regional['']);
 }
 
 $.extend(MaxLength.prototype, {
+	/* Override the default settings for all max length instances.
+		@param options (object) the new settings to use as defaults
+		@return (MaxLength) this object */
+	setDefaults: function (options) {
+		$.extend(this._defaults, options || {});
+		return this;
+	},
 	_attachPlugin: function(target, options) {
 		target = $(target);
 		if ( target.hasClass(this.markerClassName) ) {
