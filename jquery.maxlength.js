@@ -125,7 +125,28 @@ $.extend(MaxLength.prototype, {
 		}
 
 		this._checkLength(target);
-
+	},
+	/* Enable the control.
+		@param target (element) the control to affect */
+	_enablePlugin: function (target) {
+		target = $(target);
+		if ( !target.hasClass(this.markerClassName) ) {
+			return;
+		}
+		target.prop('disabled', false).removeClass('maxlength-disabled');
+		var inst = target.data(this.propertyName);
+		inst.feedbackTarget.removeClass('maxlength-disabled');
+	},
+	/* Disable the control.
+		@param target (element) the control to affect */
+	_disablePlugin: function (target) {
+		target = $(target);
+		if ( !target.hasClass(this.markerClassName) ) {
+			return;
+		}
+		target.prop('disabled', true).addClass('maxlength-disabled');
+		var inst = target.data(this.propertyName);
+		inst.feedbackTarget.addClass('maxlength-disabled');
 	}
 });
 
